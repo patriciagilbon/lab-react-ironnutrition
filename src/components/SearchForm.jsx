@@ -3,6 +3,8 @@ import { Input } from 'antd';
 import './AddFoodForm.css';
 import PropTypes from 'prop-types';
 
+const { Search } = Input;
+
 class SearchForm extends Component {
   constructor(props) {
     super(props);
@@ -25,11 +27,19 @@ class SearchForm extends Component {
 
   render() {
     return (
-      <div className="fromFormat">
-        <label>Search:</label>
-        <Input type="text" id="searched" name="searched" value={this.state.searched} onKeyUp={this.handleFormSubmit} onChange={(e) => this.handlesearchedInput(e)} />
+      <Search
+        placeholder="Banana"
+        id="searched"
+        name="searched"
+        allowClear
+        value={this.state.searched}
+        onChange={(e) => this.handlesearchedInput(e)}
+        onKeyUp={this.handleFormSubmit}
+        style={{
+          width: '100%',
+        }}
+      />
 
-      </div>
     );
   }
 }

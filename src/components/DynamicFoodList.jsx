@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { Button } from 'antd';
+import { Row, Col } from 'antd';
 import foods from '../foods.json';
 import FoodBoxs from './FoodBox';
-import './DynamicFoodList.css';
 import AddFoodItem from './AddFoodForm';
 import SearchForm from './SearchForm';
 
@@ -12,7 +11,6 @@ class DynamicFoodList extends Component {
     this.state = {
       foods,
       queryText: '',
-      addFormVisibility: true,
     };
   }
 
@@ -29,23 +27,55 @@ class DynamicFoodList extends Component {
     });
   };
 
+  deleteItem = (foodItem) => {
+    this.setState((prevState) => {
+      const FoodCopy = [...prevState.foods]; // copy!
+      const index = FoodCopy.findIndex((item) => item.name === foodItem);
+      if (index > -1) { // only splice array when item is found
+        FoodCopy.splice(index, 1); // 2nd parameter means remove one item only
+      }
+      return { foods: FoodCopy };
+    });
+  };
+
   addSearch = (queryText) => {
     this.setState({
       queryText,
     });
   };
 
-  toggle = () => {
-    this.setState((prevState) => ({ addFormVisibility: !prevState.addFormVisibility }));
-  };
-
   render() {
     return (
       <div>
-        <Button onClick={this.toggle}>{this.state.addFormVisibility ? 'Hide Form' : 'Show Form'}</Button>
-        {this.state.addFormVisibility ? <AddFoodItem addTheFood={this.addFoodHandler} /> : null}
-        <SearchForm searchFood={this.addSearch} />
-        <div className="foodList">
+        <Row
+          justify="space-between"
+          gutter={[{
+            xs: 8, sm: 16, md: 24, lg: 32,
+          }, {
+            xs: 8, sm: 16, md: 24, lg: 32,
+          }]}
+        >
+          <Col
+            xs={24}
+            sm={16}
+          >
+            <AddFoodItem addTheFood={this.addFoodHandler} />
+          </Col>
+          <Col
+            xs={24}
+            sm={8}
+          >
+            <SearchForm searchFood={this.addSearch} />
+          </Col>
+        </Row>
+        <Row
+          gutter={[{
+            xs: 8, sm: 16, md: 24, lg: 32,
+          }, {
+            xs: 8, sm: 16, md: 24, lg: 32,
+          }]}
+          style={{ marginTop: '10px' }}
+        >
           {
             this.state.foods.filter(
               (obj) => obj.name.toLowerCase().includes(this.state.queryText.toLowerCase()),
@@ -56,10 +86,11 @@ class DynamicFoodList extends Component {
                 calories={item.calories}
                 image={item.image}
                 servings={item.servings}
+                clickToDelete={() => this.deleteItem(item.name)}
               />
             ))
           }
-        </div>
+        </Row>
       </div>
     );
   }
